@@ -33,7 +33,6 @@ void Figure::init() {
 }
 
 void Figure::update() {
-    this->x += 1;
     this->y += 1;
 }
 
@@ -113,4 +112,11 @@ int Figure::getX() const {
 
 int Figure::getY() const {
     return this->y;
+}
+
+void Figure::rotate() {
+    this->angle += 90;
+    if (this->angle == 360) {
+        this->angle = 0;
+    }
 }

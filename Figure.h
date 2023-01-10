@@ -22,6 +22,7 @@ public:
     void selfEraseFromMap();
     void rotation();
     void setAngle(int value);
+    void rotate();
     int getX() const;
     int getY() const;
     void setX(int value);
