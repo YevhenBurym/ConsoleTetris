@@ -8,9 +8,9 @@
 
 class Figure {
 private:
-    int h;
-    int w;
+    int h, w;
     int x, y;
+    int angle;
     int* figureArray;
     Map* map;
 public:
@@ -20,7 +20,12 @@ public:
     void update();
     void print();
     void selfEraseFromMap();
-
+    void rotation();
+    void setAngle(int value);
+    int getX() const;
+    int getY() const;
+    void setX(int value);
+    void setY(int value);
     int& operator()(int posX, int posY);
 };
 

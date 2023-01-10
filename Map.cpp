@@ -27,12 +27,6 @@ Map::Map(int width, int height) {
         this->mapArray[y * this->widthWithBorder] = MapElements::BORDER;
         this->mapArray[y * this->widthWithBorder + lastCol] = MapElements::BORDER;
     }
-
-//    for (int i = 0; i < heightWithBorder * widthWithBorder; ++i) {
-//        this->mapArray[i] = 0;
-//    }
-
-
 }
 
 Map::~Map() {
@@ -45,6 +39,10 @@ int Map::getW() const {
 
 int Map::getH() const {
     return this->height;
+}
+
+void Map::update() {
+
 }
 
 void Map::print() {

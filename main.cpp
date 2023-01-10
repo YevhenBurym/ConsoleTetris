@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Map.h"
 #include "Figure.h"
+#include <conio.h>
 
 class Game {
 private:
@@ -24,6 +25,12 @@ void Game::init() {
 }
 
 
+enum ButtonCode {
+    LEFT = 75,
+    UP = 72,
+    RIGHT = 77,
+    DOWN = 80
+};
 
 int main() {
     Game game(10,10);
@@ -31,20 +38,33 @@ int main() {
     Map map(15, 15);
     Figure fig(5,5, &map);
 
-    //map(11,3) = MapElements::BRICK;
-    fig.print();
-    map.print();
-
-    //system("cls");
-
-    fig.update();
-    fig.print();
-    map.print();
-    char key = 0;
-//getchar();
-//    while (key != ' ') {
-//        key = getchar();
-//    }
+    int key = 0;
+    int angle = 0;
+    while (1) {
+        system("cls");
+        if (_kbhit()) {
+            key = _getch();
+            if (key == ButtonCode::LEFT) {
+                fig.setX(fig.getX() - 1);
+            }
+            if (key == ButtonCode::UP) {
+                angle += 90;
+                if (angle == 360) {
+                    angle = 0;
+                }
+                fig.setAngle(angle);
+            }
+            if (key == ButtonCode::RIGHT) {
+                fig.setX(fig.getX() + 1);
+            }
+            if (key == ButtonCode::DOWN) {
+                fig.setY(fig.getY() + 1);
+            }
+            key = 0;
+        }
+        fig.print();
+        map.print();
+    }
 
     return 0;
 }

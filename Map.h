@@ -23,6 +23,7 @@ public:
     int getW() const;
     int getH() const;
     void print();
+    void update();
     int& operator()(int x, int y);
 };
 
