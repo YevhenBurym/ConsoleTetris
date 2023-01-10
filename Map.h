@@ -24,7 +24,6 @@ public:
     int getH() const;
     void print();
     int& operator()(int x, int y);
-    const int& operator()(int x, int y) const; // для константных объектов
 };
 
 #endif //MATRIX_H

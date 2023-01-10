@@ -3,4 +3,4 @@ project(ConsoleTetris)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(ConsoleTetris main.cpp Map.cpp)
+add_executable(ConsoleTetris main.cpp Map.cpp Figure.cpp Figure.h)

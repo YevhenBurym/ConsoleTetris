@@ -83,19 +83,3 @@ int &Map::operator()(int x, int y) {
     }
     return this->mapArray[this->height * this->widthWithBorder + this->width];
 }
-
-const int &Map::operator()(int x, int y) const {
-    int xWithBorder = x + 1;
-    int yWithBorder = y + 1;
-
-    if ( (xWithBorder >= 0 && xWithBorder < this->width) && (yWithBorder >= 0 && yWithBorder < this->height) ) {
-        return this->mapArray[yWithBorder * this->widthWithBorder + xWithBorder];
-    }
-    if (yWithBorder >= 0 && yWithBorder < this->height) {
-        return this->mapArray[yWithBorder * this->widthWithBorder + this->width];
-    }
-    if (xWithBorder >= 0 && xWithBorder < this->width) {
-        return this->mapArray[this->height * this->widthWithBorder + xWithBorder];
-    }
-    return this->mapArray[this->height * this->widthWithBorder + this->width];
-}
