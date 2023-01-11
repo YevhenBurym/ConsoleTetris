@@ -15,7 +15,8 @@ enum ButtonCode {
     UP = 72,
     RIGHT = 77,
     DOWN = 80,
-    ESCAPE = 27
+    ESCAPE = 27,
+    SPACE = 32
 };
 
 class Game {

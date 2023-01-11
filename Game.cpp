@@ -7,7 +7,7 @@
 Game::Game(int width, int height) {
     this->quit = false;
     this->map = new Map(width, height);
-    this->figure = new Figure(5,5, this->map);
+    this->figure = new Figure(1,0, this->map);
 }
 
 Game::~Game() {
@@ -16,7 +16,8 @@ Game::~Game() {
 }
 
 void Game::init() {
-
+    this->figure->init();
+    this->map->init();
 }
 
 void Game::update() {
@@ -32,7 +33,7 @@ void Game::print() {
 
 void Game::run() {
     const int fps = 60;
-    const int frameDelay = static_cast<int>(1000 / fps);
+    const int frameDelay = 1000 / fps;
     std::chrono::high_resolution_clock::time_point startTime;
     std::chrono::duration<double> frameTime{};
 
@@ -45,7 +46,7 @@ void Game::run() {
         this->print();
         frameTime = std::chrono::high_resolution_clock::now() - startTime;
         if (frameDelay > frameTime.count()) {
-            int x = frameDelay - frameTime.count();
+            int x = frameDelay - static_cast<int>(frameTime.count());
             std::this_thread::sleep_for(std::chrono::milliseconds(x));
         }
     }
@@ -73,6 +74,9 @@ void Game::inputHandler() {
                 break;
             case ButtonCode::ESCAPE:
                 this->quit = true;
+                break;
+            case ButtonCode::SPACE:
+                this->figure->setY(this->figure->getY() + 5);
                 break;
             default:
                 break;

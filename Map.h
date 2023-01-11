@@ -6,7 +6,7 @@
 #define MATRIX_H
 
 enum MapElements {
-    SPACE,
+    FREE,
     BRICK,
     BORDER
 };
@@ -22,6 +22,7 @@ public:
     ~Map();
     int getW() const;
     int getH() const;
+    void init();
     void print();
     void update();
     int& operator()(int x, int y);

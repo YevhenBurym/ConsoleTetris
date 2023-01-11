@@ -13,6 +13,9 @@ private:
     int angle;
     int* figureArray;
     Map* map;
+    bool horOrient;
+    int checkX(int xVal);
+    int checkY(int xVal);
 public:
     Figure(int x, int y, Map* map);
     ~Figure();
@@ -20,8 +23,7 @@ public:
     void update();
     void print();
     void selfEraseFromMap();
-    void rotation();
-    void setAngle(int value);
+    void changeOrientation();
     void rotate();
     int getX() const;
     int getY() const;

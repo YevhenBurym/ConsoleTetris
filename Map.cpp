@@ -11,22 +11,6 @@ Map::Map(int width, int height) {
     this->widthWithBorder = width + 2;
     this->heightWithBorder = height + 2;
     this->mapArray = new int[this->heightWithBorder * this->widthWithBorder];
-
-    int lastRow = this->heightWithBorder - 1;
-    int lastCol = this->widthWithBorder - 1;
-
-    for (int i = 1; i < this->height * this->width; ++i) {
-        this->mapArray[i] = MapElements::SPACE;
-    }
-
-    for ( int x = 0; x < this->widthWithBorder; x++ ) {
-        this->mapArray[x] = MapElements::BORDER;
-        this->mapArray[lastRow * this->widthWithBorder + x] = MapElements::BORDER;
-    }
-    for ( int y = 0; y < this->heightWithBorder; y++ ) {
-        this->mapArray[y * this->widthWithBorder] = MapElements::BORDER;
-        this->mapArray[y * this->widthWithBorder + lastCol] = MapElements::BORDER;
-    }
 }
 
 Map::~Map() {
@@ -56,7 +40,7 @@ void Map::print() {
                 case MapElements::BRICK:
                   element = '#';
                   break;
-                case MapElements::SPACE:
+                case MapElements::FREE:
                   element = ' ';
                   break;
             }
@@ -80,4 +64,22 @@ int &Map::operator()(int x, int y) {
         return this->mapArray[this->height * this->widthWithBorder + xWithBorder];
     }
     return this->mapArray[this->height * this->widthWithBorder + this->width];
+}
+
+void Map::init() {
+    for (int i = 0; i < this->heightWithBorder * this->widthWithBorder; ++i) {
+        this->mapArray[i] = MapElements::FREE;
+    }
+
+    int lastRow = this->heightWithBorder - 1;
+    int lastCol = this->widthWithBorder - 1;
+
+    for ( int x = 0; x < this->widthWithBorder; x++ ) {
+        this->mapArray[x] = MapElements::BORDER;
+        this->mapArray[lastRow * this->widthWithBorder + x] = MapElements::BORDER;
+    }
+    for ( int y = 0; y < this->heightWithBorder; y++ ) {
+        this->mapArray[y * this->widthWithBorder] = MapElements::BORDER;
+        this->mapArray[y * this->widthWithBorder + lastCol] = MapElements::BORDER;
+    }
 }
