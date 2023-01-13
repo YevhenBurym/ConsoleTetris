@@ -10,6 +10,7 @@ Figure::Figure(int x, int y, Map* map) {
     this->h = 3;
     this->w = 2;
     this->angle = 0;
+    this->Vy = 0;
     this->horOrient = false;
     this->figureArray = new int[this->h * this->w];
     for (int i = 0; i < this->h * this->w; ++i) {
@@ -33,19 +34,16 @@ void Figure::init() {
 }
 
 void Figure::update() {
-    this->y += 1;
+    float velocityCoeff = 0.2;
+    this->Vy += velocityCoeff;
+    if (this->Vy >= 1) {
+        this->y += static_cast<int>(this->Vy);
+        this->Vy = 0;
+    }
 }
 
 void Figure::print() {
-    this->selfEraseFromMap();
     this->changeOrientation();
-}
-
-void Figure::selfEraseFromMap() {
-    for (int i = 0; i < this->x + this->map->getW(); ++i) {
-        for (int j = 0; j < this->y + this->h; ++j)
-            (*this->map)(i, j) = MapElements::FREE;
-    }
 }
 
 int &Figure::operator()(int posX, int posY) {
@@ -66,7 +64,7 @@ void Figure::changeOrientation() {
         case 0: {
             for (int i = 0; i < this->w; i++) {
                 for (int j = 0; j < this->h; j++) {
-                    (*this->map)(this->x + i, this->y + j) = (*this)(i, j);
+                    (*this->map)(FOR_PRINTING, this->x + i, this->y + j) = (*this)(i, j);
                 }
             }
             this->horOrient = false;
@@ -75,7 +73,7 @@ void Figure::changeOrientation() {
         case 90: {
             for (int i = 0, k = this->w - 1; i < this->w && k >= 0; i++, k--) {
                 for (int j = 0, n = this->h - 1; j < this->h && n >= 0; j++, n--) {
-                    (*this->map)(this->x + j, this->y + i) = (*this)(i, n);
+                    (*this->map)(FOR_PRINTING, this->x + j, this->y + i) = (*this)(i, n);
                 }
             }
             this->horOrient = true;
@@ -84,7 +82,7 @@ void Figure::changeOrientation() {
         case 180: {
             for ( int i = 0, iLast = this->w - 1; i < this->w && iLast >= 0; i++, iLast-- ) {
                 for (int  j = 0, jLast = this->h - 1; j < this->h && jLast >= 0; j++, jLast-- ) {
-                    (*this->map)(this->x + iLast, this->y + jLast) = (*this)(i,j);
+                    (*this->map)(FOR_PRINTING, this->x + iLast, this->y + jLast) = (*this)(i,j);
                 }
             }
             this->horOrient = false;
@@ -93,7 +91,7 @@ void Figure::changeOrientation() {
         case 270: {
             for ( int i = 0, k = this->w - 1; i < this->w && k>=0; i++, k-- ) {
                 for ( int j = 0; j < this->h; j++ ) {
-                    (*this->map)(this->x + j, this->y + i) = (*this)(k,j);
+                    (*this->map)(FOR_PRINTING, this->x + j, this->y + i) = (*this)(k,j);
                 }
             }
             this->horOrient = true;

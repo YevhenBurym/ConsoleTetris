@@ -10,6 +10,7 @@ class Figure {
 private:
     int h, w;
     int x, y;
+    float Vy;
     int angle;
     int* figureArray;
     Map* map;
@@ -22,7 +23,6 @@ public:
     void init();
     void update();
     void print();
-    void selfEraseFromMap();
     void changeOrientation();
     void rotate();
     int getX() const;

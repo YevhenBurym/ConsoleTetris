@@ -11,11 +11,17 @@ enum MapElements {
     BORDER
 };
 
+enum MapArrays {
+    FOR_PRINTING,
+    FOR_WRITING
+};
+
 class Map {
 private:
     int height, width;
     int widthWithBorder, heightWithBorder;
     int* mapArray;
+    int* gameFieldArray;
 public:
     Map(int width, int height);
     Map(const Map& other) = delete;
@@ -25,7 +31,7 @@ public:
     void init();
     void print();
     void update();
-    int& operator()(int x, int y);
+    int& operator()(MapArrays arr, int x, int y);
 };
 
 #endif //MATRIX_H

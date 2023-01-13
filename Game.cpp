@@ -7,7 +7,7 @@
 Game::Game(int width, int height) {
     this->quit = false;
     this->map = new Map(width, height);
-    this->figure = new Figure(1,0, this->map);
+    this->figure = new Figure(5,0, this->map);
 }
 
 Game::~Game() {
@@ -21,7 +21,7 @@ void Game::init() {
 }
 
 void Game::update() {
-    //this->figure->update();
+    this->figure->update();
     this->map->update();
 }
 
