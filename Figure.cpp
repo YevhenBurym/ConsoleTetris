@@ -17,6 +17,7 @@ Figure::Figure(int x, int y, Map* map) {
         this->figureArray[i] = MapElements::FREE;
     }
     this->map = map;
+    this->init();
 }
 
 Figure::~Figure() {
@@ -43,7 +44,7 @@ void Figure::update() {
 }
 
 void Figure::print() {
-    this->changeOrientation();
+    this->writeToMapArray(MapArrays::FOR_PRINTING);
 }
 
 int &Figure::operator()(int posX, int posY) {
@@ -59,12 +60,14 @@ int &Figure::operator()(int posX, int posY) {
     return this->figureArray[this->h * this->w + this->w];
 }
 
-void Figure::changeOrientation() {
+void Figure::writeToMapArray(MapArrays targetArray) {
     switch (this->angle) {
         case 0: {
             for (int i = 0; i < this->w; i++) {
                 for (int j = 0; j < this->h; j++) {
-                    (*this->map)(FOR_PRINTING, this->x + i, this->y + j) = (*this)(i, j);
+                    if ((*this)(i, j) == MapElements::BRICK) {
+                        (*this->map)(targetArray, this->x + i, this->y + j) = (*this)(i, j);
+                    }
                 }
             }
             this->horOrient = false;
@@ -73,7 +76,9 @@ void Figure::changeOrientation() {
         case 90: {
             for (int i = 0, k = this->w - 1; i < this->w && k >= 0; i++, k--) {
                 for (int j = 0, n = this->h - 1; j < this->h && n >= 0; j++, n--) {
-                    (*this->map)(FOR_PRINTING, this->x + j, this->y + i) = (*this)(i, n);
+                    if ((*this)(i, n) == MapElements::BRICK) {
+                        (*this->map)(targetArray, this->x + j, this->y + i) = (*this)(i, n);
+                    }
                 }
             }
             this->horOrient = true;
@@ -82,7 +87,9 @@ void Figure::changeOrientation() {
         case 180: {
             for ( int i = 0, iLast = this->w - 1; i < this->w && iLast >= 0; i++, iLast-- ) {
                 for (int  j = 0, jLast = this->h - 1; j < this->h && jLast >= 0; j++, jLast-- ) {
-                    (*this->map)(FOR_PRINTING, this->x + iLast, this->y + jLast) = (*this)(i,j);
+                    if ((*this)(i, j) == MapElements::BRICK) {
+                        (*this->map)(targetArray, this->x + iLast, this->y + jLast) = (*this)(i, j);
+                    }
                 }
             }
             this->horOrient = false;
@@ -91,23 +98,23 @@ void Figure::changeOrientation() {
         case 270: {
             for ( int i = 0, k = this->w - 1; i < this->w && k>=0; i++, k-- ) {
                 for ( int j = 0; j < this->h; j++ ) {
-                    (*this->map)(FOR_PRINTING, this->x + j, this->y + i) = (*this)(k,j);
+                    if ((*this)(k, j) == MapElements::BRICK) {
+                        (*this->map)(targetArray, this->x + j, this->y + i) = (*this)(k, j);
+                    }
                 }
             }
             this->horOrient = true;
         }
         break;
     }
-    this->x = checkX(this->x);
-    this->y = checkY(this->y);
 }
 
 void Figure::setX(int value) {
-    this->x = checkX(value);
+    this->x = value;
 }
 
 void Figure::setY(int value) {
-    this->y = checkY(value);
+    this->y = value;
 }
 
 int Figure::getX() const {
@@ -125,36 +132,18 @@ void Figure::rotate() {
     }
 }
 
-int Figure::checkX(int xVal) {
-    int value = xVal;
-
+int Figure::getW() const {
     int factWidth = this->w;
     if (this->horOrient) {
         factWidth += this->h - this->w;
     }
-
-    if (value < 0) {
-        value = 0;
-    }
-    if (value > this->map->getW() - factWidth) {
-        value = this->map->getW() - factWidth;
-    }
-    return value;
+    return factWidth;
 }
 
-int Figure::checkY(int yVal) {
-    int value = yVal;
-
+int Figure::getH() const {
     int factHeight = this->h;
     if (this->horOrient) {
         factHeight -= this->h - this->w;
     }
-
-    if (value < 0) {
-        value = 0;
-    }
-    if (value > this->map->getH() - factHeight) {
-        value = this->map->getH() - factHeight;
-    }
-    return value;
+    return factHeight;
 }

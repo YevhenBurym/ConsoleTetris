@@ -7,7 +7,7 @@
 Game::Game(int width, int height) {
     this->quit = false;
     this->map = new Map(width, height);
-    this->figure = new Figure(5,0, this->map);
+    this->figure = new Figure(width / 2 - 1, 0, this->map);
 }
 
 Game::~Game() {
@@ -18,17 +18,32 @@ Game::~Game() {
 void Game::init() {
     this->figure->init();
     this->map->init();
+
+    (*this->map)(FOR_WRITING, this->map->getW() - 12, this->map->getH() - 5) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 5) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 14, this->map->getH() - 5) = MapElements::BORDER;
+
+
+    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 5) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 4) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 3) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 5) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 4) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 3) = MapElements::BORDER;
 }
 
 void Game::update() {
-    this->figure->update();
-    this->map->update();
+    this->checkCollision();         //перевыряє і вирішує колізії
+    this->figure->update();         //ітерує Y
+    this->checkCollision();         //перевыряє і вирішує колізії
+    this->map->update();            //копіює усе з FOR_WRITTING
+
 }
 
 void Game::print() {
     system("cls");
-    this->figure->print();
-    this->map->print();
+    this->figure->print();   //копіює усе в FOR_PRINTING
+    this->map->print();      //Просто малює себе
 }
 
 void Game::run() {
@@ -50,10 +65,6 @@ void Game::run() {
             std::this_thread::sleep_for(std::chrono::milliseconds(x));
         }
     }
-}
-
-void Game::setQuit(bool state) {
-    this->quit = state;
 }
 
 void Game::inputHandler() {
@@ -82,4 +93,57 @@ void Game::inputHandler() {
                 break;
         }
     }
+}
+
+void Game::checkCollision() {
+    if (this->figure->getX() < 0) {
+        this->figure->setX(0);
+    }
+    if (this->figure->getY() < 0) {
+        this->figure->setY(0);
+    }
+
+    if (this->figure->getX() > this->map->getW() - this->figure->getW()) {
+        this->figure->setX(this->map->getW() - this->figure->getW());
+    }
+
+    if (this->figure->getY() > this->map->getH() - this->figure->getH()) {
+        this->figure->setY(this->map->getH() - this->figure->getH());
+        this->createNewFigure();
+        return;
+    }
+
+/*Перевірка боків фігури*/
+    int lastFigureX = this->figure->getX() + (this->figure->getW() - 1);
+        int lastFigureY = this->figure->getY() + (this->figure->getH() - 1);
+
+    for (int xFig = this->figure->getX(); xFig < this->figure->getX() + this->figure->getW(); ++xFig) {
+        for (int yFig = this->figure->getY(); yFig < this->figure->getY() + this->figure->getH(); ++yFig) {
+
+            /*Перевірка низу фігури*/
+            if ((*this->map)(FOR_PRINTING, xFig, lastFigureY) == MapElements::BRICK &&
+                (*this->map)(FOR_WRITING, xFig, lastFigureY) != MapElements::FREE) {
+                this->figure->setY(this->figure->getY() - 1);
+                this->createNewFigure();
+                return;
+            }
+/*Перевірка боків фігури*/
+            if ((*this->map)(FOR_PRINTING, xFig, yFig) == MapElements::BRICK &&
+                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
+                if (xFig == lastFigureX) {
+                    this->figure->setX(this->figure->getX() - 1);
+                } else {
+                    this->figure->setX(this->figure->getX() + 1);
+                }
+                break;
+            }
+        }
+    }
+}
+
+void Game::createNewFigure() {
+    Figure* temp = this->figure;
+    this->figure = new Figure(this->map->getW() / 2 - 1, 0, this->map);
+    temp->writeToMapArray(FOR_WRITING);
+    delete temp;
 }

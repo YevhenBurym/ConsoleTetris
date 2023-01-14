@@ -27,9 +27,10 @@ private:
 public:
     Game(int width, int height);
     ~Game();
-    void setQuit(bool state);
+    void createNewFigure();
     void inputHandler();
     void init();
+    void checkCollision();
     void update();
     void print();
     void run();

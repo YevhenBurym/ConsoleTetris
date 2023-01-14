@@ -15,18 +15,18 @@ private:
     int* figureArray;
     Map* map;
     bool horOrient;
-    int checkX(int xVal);
-    int checkY(int xVal);
 public:
     Figure(int x, int y, Map* map);
     ~Figure();
     void init();
     void update();
     void print();
-    void changeOrientation();
+    void writeToMapArray(MapArrays targetArray);
     void rotate();
     int getX() const;
     int getY() const;
+    int getW() const;
+    int getH() const;
     void setX(int value);
     void setY(int value);
     int& operator()(int posX, int posY);
