@@ -10,13 +10,18 @@ Map::Map(int width, int height) {
     this->width = width;
     this->widthWithBorder = width + 2;
     this->heightWithBorder = height + 2;
-    this->mapArray = new int[this->heightWithBorder * this->widthWithBorder];
-    this->gameFieldArray = new int[this->height * this->width];
+
+    this->mapArray = std::vector<std::vector<int>>(this->widthWithBorder);
+    this->gameField = std::vector<std::vector<int>>(this->width);
+    for ( auto &column : this->mapArray) {
+        column = std::vector<int>(this->heightWithBorder);
+    }
+    for ( auto &column : this->gameField) {
+        column = std::vector<int>(this->height);
+    }
 }
 
 Map::~Map() {
-    delete[] mapArray;
-    delete[] gameFieldArray;
 }
 
 int Map::getW() const {
@@ -28,27 +33,30 @@ int Map::getH() const {
 }
 
 void Map::update() {
-    for (int i = 0; i < this->height; ++i) {
-        for (int j = 0; j < this->width; ++j) {
-            this->mapArray[(i+1) * this->widthWithBorder + (j+1)] = this->gameFieldArray[i * this->width + j];
+    for (auto i = this->gameField.begin(), i1 = this->mapArray.begin() + 1; i < this->gameField.end(); ++i, ++i1) {
+        for (auto j = (*i).begin(), j1 = (*i1).begin() + 1; j < (*i).end(); ++j, ++j1) {
+            *j1 = *j;
         }
     }
+
 }
 
 void Map::print() {
     char element = ' ';
-    for (int i = 0; i < this->heightWithBorder; ++i) {
-        for (int j = 0; j < this->widthWithBorder; ++j) {
-            switch (this->mapArray[i * this->widthWithBorder + j]) {
+    for (auto & row : this->mapArray) {
+        for (int & col : row) {
+            switch (col) {
                 case MapElements::BORDER:
-                  element = '*';
-                  break;
+                    element = '*';
+                    break;
                 case MapElements::BRICK:
-                  element = '#';
-                  break;
+                    element = '#';
+                    break;
                 case MapElements::FREE:
-                  element = ' ';
-                  break;
+                    element = ' ';
+                    break;
+                default:
+                    break;
             }
             std::cout << element;
         }
@@ -59,46 +67,51 @@ void Map::print() {
 int &Map::operator()(MapArrays arr, int x, int y) {
     if (arr == MapArrays::FOR_PRINTING) {
         if ((x >= 0 && x < this->width) && (y >= 0 && y < this->height)) {
-            return this->mapArray[(y + 1) * this->widthWithBorder + (x + 1)];
+            return this->mapArray[y + 1][x + 1];
         }
         if (y >= 0 && y < this->height) {
-            return this->mapArray[(y + 1) * this->widthWithBorder + this->width];
+            return this->mapArray[y + 1][this->width];
         }
         if (x >= 0 && x < this->width) {
-            return this->mapArray[this->height * this->widthWithBorder + (x + 1)];
+            return this->mapArray[this->height][x + 1];
         }
+
     }
     if (arr == MapArrays::FOR_WRITING) {
         if ((x >= 0 && x < this->width) && (y >= 0 && y < this->height)) {
-            return this->gameFieldArray[y * this->width + x];
+            return this->gameField[y][x];
         }
         if (y >= 0 && y < this->height) {
-            return this->mapArray[y * this->width + this->width];
+            return this->gameField[y][this->width];
         }
         if (x >= 0 && x < this->width) {
-            return this->mapArray[this->height * this->width + x];
+            return this->gameField[this->height][x];
         }
-    }
-    return this->mapArray[this->height * this->widthWithBorder + this->width];
 
+    }
+    return this->mapArray[this->height][this->width];
 }
 
 void Map::init() {
-//    for (int i = 0; i < this->heightWithBorder * this->widthWithBorder; ++i) {
-//        this->mapArray[i] = MapElements::FREE;
-//    }
-    for (int i = 0; i < this->height * this->width; ++i) {
-        this->gameFieldArray[i] = MapElements::FREE;
+
+    for (auto &row: this->gameField) {
+        for (int &col: row) {
+            col = MapElements::FREE;
+        }
     }
+
     int lastRow = this->heightWithBorder - 1;
     int lastCol = this->widthWithBorder - 1;
 
-    for ( int x = 0; x < this->widthWithBorder; x++ ) {
-        this->mapArray[x] = MapElements::BORDER;
-        this->mapArray[lastRow * this->widthWithBorder + x] = MapElements::BORDER;
+    for (int &col: this->mapArray[0]) {
+        col = MapElements::BORDER;
     }
-    for ( int y = 0; y < this->heightWithBorder; y++ ) {
-        this->mapArray[y * this->widthWithBorder] = MapElements::BORDER;
-        this->mapArray[y * this->widthWithBorder + lastCol] = MapElements::BORDER;
+    for (int &col: this->mapArray[lastRow]) {
+        col = MapElements::BORDER;
     }
+    for (auto &row: this->mapArray) {
+        row[0] = MapElements::BORDER;
+        row[lastCol] = MapElements::BORDER;
+    }
+
 }

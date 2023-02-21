@@ -2,6 +2,7 @@
 // Created by Евгений on 10.01.2023.
 //
 
+#include <iostream>
 #include "Game.h"
 
 Game::Game(int width, int height) {
@@ -33,9 +34,9 @@ void Game::init() {
 }
 
 void Game::update() {
-    this->checkCollision();         //перевыряє і вирішує колізії
+    this->checkCollision();         //перевіряє і вирішує колізії
     this->figure->update();         //ітерує Y
-    this->checkCollision();         //перевыряє і вирішує колізії
+    this->checkCollision();         //перевіряє і вирішує колізії
     this->map->update();            //копіює усе з FOR_WRITTING
 
 }
@@ -117,26 +118,47 @@ void Game::checkCollision() {
     int lastFigureX = this->figure->getX() + (this->figure->getW() - 1);
         int lastFigureY = this->figure->getY() + (this->figure->getH() - 1);
 
-    for (int xFig = this->figure->getX(); xFig < this->figure->getX() + this->figure->getW(); ++xFig) {
-        for (int yFig = this->figure->getY(); yFig < this->figure->getY() + this->figure->getH(); ++yFig) {
+    for (int xFig = this->figure->getX(), i = 0; i < this->figure->getW(); ++xFig, ++i) {
+        for (int yFig = this->figure->getY(), j = 0; j<this->figure->getH(); ++yFig, ++j) {
+
+//            /*Перевірка низу фігури*/
+//            if ((*this->map)(FOR_PRINTING, xFig, lastFigureY) == MapElements::BRICK &&
+//                (*this->map)(FOR_WRITING, xFig, lastFigureY) != MapElements::FREE) {
+//                this->figure->setY(this->figure->getY() - 1);
+//                this->createNewFigure();
+//                return;
+//            }
 
             /*Перевірка низу фігури*/
-            if ((*this->map)(FOR_PRINTING, xFig, lastFigureY) == MapElements::BRICK &&
-                (*this->map)(FOR_WRITING, xFig, lastFigureY) != MapElements::FREE) {
-                this->figure->setY(this->figure->getY() - 1);
+            if ((*this->figure)(i, j) == MapElements::BRICK &&
+                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
+
+                std::cout << "figure point: "<<i <<", "<< j<<"= " << (*this->figure)(i, j) << std::endl;
+                std::cout <<"Writing array point: "<< xFig <<", "<< yFig <<"= " << (*this->map)(FOR_WRITING, xFig, yFig) << std::endl;
                 this->createNewFigure();
                 return;
             }
+
 /*Перевірка боків фігури*/
-            if ((*this->map)(FOR_PRINTING, xFig, yFig) == MapElements::BRICK &&
-                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
-                if (xFig == lastFigureX) {
-                    this->figure->setX(this->figure->getX() - 1);
-                } else {
-                    this->figure->setX(this->figure->getX() + 1);
-                }
-                break;
-            }
+//            if ((*this->map)(FOR_PRINTING, xFig, yFig) == MapElements::BRICK &&
+//                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
+//                if (xFig == lastFigureX) {
+//                    this->figure->setX(this->figure->getX() - 1);
+//                } else {
+//                    this->figure->setX(this->figure->getX() + 1);
+//                }
+//                break;
+//            }
+
+//            if ((*this->figure)(i, j) == MapElements::BRICK &&
+//                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
+//                if (xFig == lastFigureX) {
+//                    this->figure->setX(this->figure->getX() - 1);
+//                } else {
+//                    this->figure->setX(this->figure->getX() + 1);
+//                }
+//                break;
+//            }
         }
     }
 }

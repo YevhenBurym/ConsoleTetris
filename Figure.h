@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <vector>
 #include "Map.h"
 
 class Figure {
@@ -13,6 +14,7 @@ private:
     float Vy;
     int angle;
     int* figureArray;
+    std::vector<std::vector<int>> figure;
     Map* map;
     bool horOrient;
 public:

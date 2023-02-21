@@ -5,6 +5,8 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <vector>
+
 enum MapElements {
     FREE,
     BRICK,
@@ -20,8 +22,8 @@ class Map {
 private:
     int height, width;
     int widthWithBorder, heightWithBorder;
-    int* mapArray;
-    int* gameFieldArray;
+    std::vector<std::vector<int>> mapArray;
+    std::vector<std::vector<int>> gameField;
 public:
     Map(int width, int height);
     Map(const Map& other) = delete;
