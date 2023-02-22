@@ -11,14 +11,8 @@ Map::Map(int width, int height) {
     this->widthWithBorder = width + 2;
     this->heightWithBorder = height + 2;
 
-    this->mapArray = std::vector<std::vector<int>>(this->widthWithBorder);
-    this->gameField = std::vector<std::vector<int>>(this->width);
-    for ( auto &column : this->mapArray) {
-        column = std::vector<int>(this->heightWithBorder);
-    }
-    for ( auto &column : this->gameField) {
-        column = std::vector<int>(this->height);
-    }
+    this->mapArray = std::vector<std::vector<int>>(this->widthWithBorder, std::vector<int>(this->heightWithBorder));
+    this->gameField = std::vector<std::vector<int>>(this->width, std::vector<int>(this->height));
 }
 
 Map::~Map() {
