@@ -20,9 +20,11 @@ void Game::init() {
     this->figure->init();
     this->map->init();
 
-    (*this->map)(FOR_WRITING, this->map->getW() - 12, this->map->getH() - 5) = MapElements::BORDER;
     (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 5) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 14, this->map->getH() - 5) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 6) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 7) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 8) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 9) = MapElements::BORDER;
 
 
     (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 5) = MapElements::BORDER;
@@ -36,7 +38,6 @@ void Game::init() {
 void Game::update() {
     this->checkCollision();         //перевіряє і вирішує колізії
     this->figure->update();         //ітерує Y
-    this->checkCollision();         //перевіряє і вирішує колізії
     this->map->update();            //копіює усе з FOR_WRITTING
 
 }
@@ -115,44 +116,73 @@ void Game::checkCollision() {
     }
 
 /*Перевірка боків фігури*/
-    int lastFigureX = this->figure->getX() + (this->figure->getW() - 1);
-        int lastFigureY = this->figure->getY() + (this->figure->getH() - 1);
+    int lastFigXRelToSelf = this->figure->getW() - 1;
+    int lastFigYRelToSelf = this->figure->getH() - 1;
+    int lastFigXRelToMap = this->figure->getX() + lastFigXRelToSelf;
+    int lastFigYRelToMap = this->figure->getY() + lastFigYRelToSelf;
 
-    for (int xFig = this->figure->getX(), i = 0; i < this->figure->getW(); ++xFig, ++i) {
-        for (int yFig = this->figure->getY(), j = 0; j<this->figure->getH(); ++yFig, ++j) {
+//    /*Перевірка лівої частини фігури*/
+//    for (int yFigOnMap = this->figure->getY(), yFig = 0; yFig < this->figure->getH(); ++yFigOnMap, ++yFig) {
+//        if ((*this->figure)(0, yFig) == MapElements::BRICK &&
+//            (*this->map)(FOR_WRITING, this->figure->getX(), yFigOnMap) != MapElements::FREE) {
+//            this->figure->setX(this->figure->getX() + 1);
+//        }
+//    }
 
-//            /*Перевірка низу фігури*/
-//            if ((*this->map)(FOR_PRINTING, xFig, lastFigureY) == MapElements::BRICK &&
-//                (*this->map)(FOR_WRITING, xFig, lastFigureY) != MapElements::FREE) {
+//    /*Перевірка низу фігури*/
+//    for (int xFigOnMap = this->figure->getX(), xFig = 0; xFig < this->figure->getW(); ++xFigOnMap, ++xFig) {
+//        if ((*this->figure)(xFig, lastFigYRelToSelf) == MapElements::BRICK &&
+//            (*this->map)(FOR_WRITING, xFigOnMap, lastFigYRelToMap) != MapElements::FREE) {
+//            this->figure->setY(this->figure->getY() - 1);
+//            this->createNewFigure();
+//            return;
+//        }
+//    }
+
+
+
+    for (int xFigOnMap = this->figure->getX(), xFig = 0; xFig < this->figure->getW(); ++xFigOnMap, ++xFig) {
+        for (int yFigOnMap = this->figure->getY(), yFig = 0; yFig <this->figure->getH(); ++yFigOnMap, ++yFig) {
+
+            /*Перевірка низу фігури*/
+//            if ((*this->figure)(i, this->figure->getH() - 1) == MapElements::BRICK &&
+//                (*this->map)(FOR_WRITING, xFig, lastFigYRelToMap) != MapElements::FREE) {
 //                this->figure->setY(this->figure->getY() - 1);
+////                std::cout << "figure point: "<<i <<", "<< j<<"= " << (*this->figure)(i, j) << std::endl;
+////                std::cout <<"Writing array point: "<< xFig <<", "<< yFig <<"= " << (*this->map)(FOR_WRITING, xFig, yFig) << std::endl;
 //                this->createNewFigure();
 //                return;
 //            }
 
-            /*Перевірка низу фігури*/
-            if ((*this->figure)(i, j) == MapElements::BRICK &&
-                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
-
-                std::cout << "figure point: "<<i <<", "<< j<<"= " << (*this->figure)(i, j) << std::endl;
-                std::cout <<"Writing array point: "<< xFig <<", "<< yFig <<"= " << (*this->map)(FOR_WRITING, xFig, yFig) << std::endl;
-                this->createNewFigure();
-                return;
-            }
-
 /*Перевірка боків фігури*/
-//            if ((*this->map)(FOR_PRINTING, xFig, yFig) == MapElements::BRICK &&
-//                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
-//                if (xFig == lastFigureX) {
-//                    this->figure->setX(this->figure->getX() - 1);
-//                } else {
-//                    this->figure->setX(this->figure->getX() + 1);
-//                }
-//                break;
-//            }
+            /*Перевірка лівої частини фігури*/
+            if ((*this->figure)(xFig, yFig) == MapElements::BRICK &&
+                (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap) != MapElements::FREE) {
 
+
+                if (this->figure->getY() > this->figure->getYPrev()) {
+                    if (this->figure->getX() > this->figure->getXPrev()) {
+                        this->figure->setX(this->figure->getX() - 1);
+                    } else if (this->figure->getX() < this->figure->getXPrev()) {
+                        this->figure->setX(this->figure->getX() + 1);
+                    }
+                    this->figure->setY(this->figure->getY() - 1);
+                    this->createNewFigure();
+                    return;
+                } else {
+                    if (this->figure->getX() > this->figure->getXPrev()) {
+                        this->figure->setX(this->figure->getX() - 1);
+                        break;
+                    } else if (this->figure->getX() < this->figure->getXPrev()) {
+                        this->figure->setX(this->figure->getX() + 1);
+                        break;
+                    }
+                }
+
+            }
 //            if ((*this->figure)(i, j) == MapElements::BRICK &&
 //                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
-//                if (xFig == lastFigureX) {
+//                if (xFig == lastFigXRelToMap) {
 //                    this->figure->setX(this->figure->getX() - 1);
 //                } else {
 //                    this->figure->setX(this->figure->getX() + 1);

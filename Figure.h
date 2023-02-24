@@ -11,6 +11,7 @@ class Figure {
 private:
     int h, w;
     int x, y;
+    int xPrev, yPrev;
     float Vy;
     std::vector<std::vector<int>> figure;
     Map* map;
@@ -23,6 +24,8 @@ public:
     void rotate();
     int getX() const;
     int getY() const;
+    int getXPrev() const;
+    int getYPrev() const;
     int getW() const;
     int getH() const;
     void setX(int value);

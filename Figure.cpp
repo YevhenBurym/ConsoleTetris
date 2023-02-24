@@ -8,6 +8,8 @@
 Figure::Figure(int x, int y, Map* map) {
     this->x = x;
     this->y = y;
+    this->xPrev = 0;
+    this->yPrev = 0;
     this->h = 3;
     this->w = 2;
     this->Vy = 0;
@@ -28,12 +30,16 @@ void Figure::init() {
 }
 
 void Figure::update() {
+    this->yPrev = this->y;
+    this->xPrev = this->x;
+
     float velocityCoeff = 0.2;
     this->Vy += velocityCoeff;
     if (this->Vy >= 1) {
         this->y += static_cast<int>(this->Vy);
         this->Vy = 0;
     }
+
 }
 
 void Figure::print() {
@@ -43,7 +49,7 @@ void Figure::print() {
 void Figure::writeToMapArray(MapArrays targetArray) {
     for (int i = 0; i < this->w; i++) {
         for (int j = 0; j < this->h; j++) {
-            if ((*this)(i, j) == MapElements::BRICK) {
+            if (this->figure[i][j] == MapElements::BRICK) {
                 (*this->map)(targetArray, this->x + i, this->y + j) = this->figure[i][j];
             }
         }
@@ -82,6 +88,14 @@ int Figure::getX() const {
 
 int Figure::getY() const {
     return this->y;
+}
+
+int Figure::getXPrev() const {
+    return this->xPrev;
+}
+
+int Figure::getYPrev() const {
+    return this->yPrev;
 }
 
 int Figure::getW() const {
