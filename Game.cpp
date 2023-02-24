@@ -115,80 +115,25 @@ void Game::checkCollision() {
         return;
     }
 
-/*Перевірка боків фігури*/
-    int lastFigXRelToSelf = this->figure->getW() - 1;
-    int lastFigYRelToSelf = this->figure->getH() - 1;
-    int lastFigXRelToMap = this->figure->getX() + lastFigXRelToSelf;
-    int lastFigYRelToMap = this->figure->getY() + lastFigYRelToSelf;
-
-//    /*Перевірка лівої частини фігури*/
-//    for (int yFigOnMap = this->figure->getY(), yFig = 0; yFig < this->figure->getH(); ++yFigOnMap, ++yFig) {
-//        if ((*this->figure)(0, yFig) == MapElements::BRICK &&
-//            (*this->map)(FOR_WRITING, this->figure->getX(), yFigOnMap) != MapElements::FREE) {
-//            this->figure->setX(this->figure->getX() + 1);
-//        }
-//    }
-
-//    /*Перевірка низу фігури*/
-//    for (int xFigOnMap = this->figure->getX(), xFig = 0; xFig < this->figure->getW(); ++xFigOnMap, ++xFig) {
-//        if ((*this->figure)(xFig, lastFigYRelToSelf) == MapElements::BRICK &&
-//            (*this->map)(FOR_WRITING, xFigOnMap, lastFigYRelToMap) != MapElements::FREE) {
-//            this->figure->setY(this->figure->getY() - 1);
-//            this->createNewFigure();
-//            return;
-//        }
-//    }
-
-
 
     for (int xFigOnMap = this->figure->getX(), xFig = 0; xFig < this->figure->getW(); ++xFigOnMap, ++xFig) {
         for (int yFigOnMap = this->figure->getY(), yFig = 0; yFig <this->figure->getH(); ++yFigOnMap, ++yFig) {
 
-            /*Перевірка низу фігури*/
-//            if ((*this->figure)(i, this->figure->getH() - 1) == MapElements::BRICK &&
-//                (*this->map)(FOR_WRITING, xFig, lastFigYRelToMap) != MapElements::FREE) {
-//                this->figure->setY(this->figure->getY() - 1);
-////                std::cout << "figure point: "<<i <<", "<< j<<"= " << (*this->figure)(i, j) << std::endl;
-////                std::cout <<"Writing array point: "<< xFig <<", "<< yFig <<"= " << (*this->map)(FOR_WRITING, xFig, yFig) << std::endl;
-//                this->createNewFigure();
-//                return;
-//            }
-
-/*Перевірка боків фігури*/
-            /*Перевірка лівої частини фігури*/
             if ((*this->figure)(xFig, yFig) == MapElements::BRICK &&
                 (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap) != MapElements::FREE) {
 
-
-                if (this->figure->getY() > this->figure->getYPrev()) {
-                    if (this->figure->getX() > this->figure->getXPrev()) {
-                        this->figure->setX(this->figure->getX() - 1);
-                    } else if (this->figure->getX() < this->figure->getXPrev()) {
-                        this->figure->setX(this->figure->getX() + 1);
-                    }
+                if (this->figure->getX() > this->figure->getXPrev()) {
+                    this->figure->setX(this->figure->getX() - 1);
+                    break;
+                } else if (this->figure->getX() < this->figure->getXPrev()) {
+                    this->figure->setX(this->figure->getX() + 1);
+                    break;
+                } else if (this->figure->getY() > this->figure->getYPrev()) {
                     this->figure->setY(this->figure->getY() - 1);
                     this->createNewFigure();
                     return;
-                } else {
-                    if (this->figure->getX() > this->figure->getXPrev()) {
-                        this->figure->setX(this->figure->getX() - 1);
-                        break;
-                    } else if (this->figure->getX() < this->figure->getXPrev()) {
-                        this->figure->setX(this->figure->getX() + 1);
-                        break;
-                    }
                 }
-
             }
-//            if ((*this->figure)(i, j) == MapElements::BRICK &&
-//                (*this->map)(FOR_WRITING, xFig, yFig) != MapElements::FREE) {
-//                if (xFig == lastFigXRelToMap) {
-//                    this->figure->setX(this->figure->getX() - 1);
-//                } else {
-//                    this->figure->setX(this->figure->getX() + 1);
-//                }
-//                break;
-//            }
         }
     }
 }
