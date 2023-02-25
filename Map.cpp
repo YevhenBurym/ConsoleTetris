@@ -111,15 +111,16 @@ void Map::init() {
 }
 
 void Map::isLineFilled() {
-    bool isFilled = true;
-    for (int row = this->height - 1; row >= 0; --row) {
+    int lastRow = this->height - 1;
+    for (int row = lastRow; row >= 0; --row) {
+        bool isFilled = true;
         for (int &col: this->gameField[row]) {
             if (col == MapElements::FREE) {
                 isFilled = false;
             }
         }
         if (isFilled) {
-            for (int i = 0; i < this->height - 1; ++i) {
+            for (int i = 0; i < lastRow - 1; ++i) {
                 this->gameField[row - i] = this->gameField[row - i - 1];
             }
         }
