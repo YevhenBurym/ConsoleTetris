@@ -6,9 +6,11 @@
 #include "Game.h"
 
 Game::Game(int width, int height) {
+    this->randGenerator = RandGenerator();
+    this->createFigShapes();
     this->quit = false;
     this->map = new Map(width, height);
-    this->figure = new Figure(width / 2 - 1, 0, this->map);
+    this->figure = new Figure(width / 2 - 1, 0, this->getRandShape(), this->map);
 }
 
 Game::~Game() {
@@ -16,29 +18,29 @@ Game::~Game() {
     delete this->figure;
 }
 
-void Game::init() {
-    this->figure->init();
-    this->map->init();
+void Game::createFigShapes() {
+    this->shapes.cube = {{1, 1},
+                         {1, 1}};
+    this->shapes.jRight = {{0, 1},
+                           {0, 1},
+                           {1, 1}};
+    this->shapes.jLeft = {{1, 0},
+                          {1, 0},
+                          {1, 1}};
+    this->shapes.line = {{1},
+                         {1},
+                         {1},
+                         {1}};
+    this->shapes.t = {{1, 1, 1},
+                      {0, 1, 0}};
+    this->shapes.zRight = {{1, 1, 0},
+                           {0, 1, 1}};
+    this->shapes.zLeft = {{0, 1, 1},
+                          {1, 1, 0}};
+}
 
-    (*this->map)(FOR_WRITING, this->map->getW() - 1, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 2, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 3, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 6, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 7, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 8, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 9, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 10, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 11, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 12, this->map->getH() - 1) = MapElements::BRICK;
-    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 1) = MapElements::BRICK;
-//    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 5) = MapElements::BORDER;
-//    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 4) = MapElements::BORDER;
-//    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 3) = MapElements::BORDER;
-//    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 5) = MapElements::BORDER;
-//    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 4) = MapElements::BORDER;
-//    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 3) = MapElements::BORDER;
+void Game::init() {
+    this->map->init();
 }
 
 void Game::update() {
@@ -146,7 +148,38 @@ void Game::checkCollision() {
 
 void Game::createNewFigure() {
     Figure* temp = this->figure;
-    this->figure = new Figure(this->map->getW() / 2 - 1, 0, this->map);
+    this->figure = new Figure(this->map->getW() / 2 - 1, 0, this->getRandShape(), this->map);
     temp->writeToMapArray(FOR_WRITING);
     delete temp;
+}
+
+std::vector<std::vector<int>> &Game::getRandShape() {
+    uint8_t shapesAmount = 7;
+    uint8_t randomShape = (shapesAmount - 1) * this->randGenerator.getRandNumber();
+    switch (randomShape) {
+        case 0:
+            return this->shapes.cube;
+            break;
+        case 1:
+            return this->shapes.jRight;
+            break;
+        case 2:
+            return this->shapes.jLeft;
+            break;
+        case 3:
+            return this->shapes.line;
+            break;
+        case 4:
+            return this->shapes.t;
+            break;
+        case 5:
+            return this->shapes.zRight;
+            break;
+        case 6:
+            return this->shapes.zLeft;
+            break;
+        default:
+            return this->shapes.cube;
+            break;
+    }
 }

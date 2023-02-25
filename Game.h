@@ -9,6 +9,8 @@
 #include <chrono>
 #include "Map.h"
 #include "Figure.h"
+#include "RandomGenerator.h"
+#include <random>
 
 enum ButtonCode {
     LEFT = 75,
@@ -23,7 +25,11 @@ class Game {
 private:
     Map* map;
     Figure* figure;
+    FigureShapes shapes;
     bool quit;
+    RandGenerator randGenerator;
+    void createFigShapes();
+    std::vector<std::vector<int>>& getRandShape();
 public:
     Game(int width, int height);
     ~Game();
@@ -35,4 +41,3 @@ public:
     void print();
     void run();
 };
-

@@ -5,30 +5,16 @@
 #include <iostream>
 #include "Figure.h"
 
-Figure::Figure(int x, int y, Map* map) {
+Figure::Figure(int x, int y, std::vector<std::vector<int>>& shape, Map* map) {
     this->x = x;
     this->y = y;
     this->xPrev = 0;
     this->yPrev = 0;
-    this->h = 2;
-    this->w = 2;
+    this->h = shape[0].size();
+    this->w = shape.size();
     this->Vy = 0;
-    this->figure = std::vector<std::vector<int>>(this->w, std::vector<int>(this->h));
+    this->figure = shape;
     this->map = map;
-}
-
-void Figure::init() {
-//    this->figure[0][0] = MapElements::FREE;
-//    this->figure[0][1] = MapElements::FREE;
-//    this->figure[0][2] = MapElements::BRICK;
-//    this->figure[1][0] = MapElements::BRICK;
-//    this->figure[1][1] = MapElements::BRICK;
-//    this->figure[1][2] = MapElements::BRICK;
-
-    this->figure[0][0] = MapElements::BRICK;
-    this->figure[0][1] = MapElements::BRICK;
-    this->figure[1][0] = MapElements::BRICK;
-    this->figure[1][1] = MapElements::BRICK;
 }
 
 void Figure::update() {
