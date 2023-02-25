@@ -33,6 +33,7 @@ public:
     void init();
     void print();
     void update();
+    void isLineFilled();
     int& operator()(MapArrays arr, int x, int y);
 };
 

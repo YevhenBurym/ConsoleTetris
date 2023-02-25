@@ -10,23 +10,25 @@ Figure::Figure(int x, int y, Map* map) {
     this->y = y;
     this->xPrev = 0;
     this->yPrev = 0;
-    this->h = 3;
+    this->h = 2;
     this->w = 2;
     this->Vy = 0;
-
     this->figure = std::vector<std::vector<int>>(this->w, std::vector<int>(this->h));
-
     this->map = map;
-    this->init();
 }
 
 void Figure::init() {
-    this->figure[0][0] = MapElements::FREE;
-    this->figure[0][1] = MapElements::FREE;
-    this->figure[0][2] = MapElements::BRICK;
+//    this->figure[0][0] = MapElements::FREE;
+//    this->figure[0][1] = MapElements::FREE;
+//    this->figure[0][2] = MapElements::BRICK;
+//    this->figure[1][0] = MapElements::BRICK;
+//    this->figure[1][1] = MapElements::BRICK;
+//    this->figure[1][2] = MapElements::BRICK;
+
+    this->figure[0][0] = MapElements::BRICK;
+    this->figure[0][1] = MapElements::BRICK;
     this->figure[1][0] = MapElements::BRICK;
     this->figure[1][1] = MapElements::BRICK;
-    this->figure[1][2] = MapElements::BRICK;
 }
 
 void Figure::update() {

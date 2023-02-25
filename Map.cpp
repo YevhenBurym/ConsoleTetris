@@ -27,12 +27,12 @@ int Map::getH() const {
 }
 
 void Map::update() {
+    isLineFilled();
     for (auto i = this->gameField.begin(), i1 = this->mapArray.begin() + 1; i < this->gameField.end(); ++i, ++i1) {
         for (auto j = (*i).begin(), j1 = (*i1).begin() + 1; j < (*i).end(); ++j, ++j1) {
             *j1 = *j;
         }
     }
-
 }
 
 void Map::print() {
@@ -108,4 +108,20 @@ void Map::init() {
         row[lastCol] = MapElements::BORDER;
     }
 
+}
+
+void Map::isLineFilled() {
+    bool isFilled = true;
+    for (int row = this->height - 1; row >= 0; --row) {
+        for (int &col: this->gameField[row]) {
+            if (col == MapElements::FREE) {
+                isFilled = false;
+            }
+        }
+        if (isFilled) {
+            for (int i = 0; i < this->height - 1; ++i) {
+                this->gameField[row - i] = this->gameField[row - i - 1];
+            }
+        }
+    }
 }

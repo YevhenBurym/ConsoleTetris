@@ -20,19 +20,25 @@ void Game::init() {
     this->figure->init();
     this->map->init();
 
-    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 5) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 6) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 7) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 8) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 9) = MapElements::BORDER;
-
-
-    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 5) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 4) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 3) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 5) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 4) = MapElements::BORDER;
-    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 3) = MapElements::BORDER;
+    (*this->map)(FOR_WRITING, this->map->getW() - 1, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 2, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 3, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 6, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 7, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 8, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 9, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 10, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 11, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 12, this->map->getH() - 1) = MapElements::BRICK;
+    (*this->map)(FOR_WRITING, this->map->getW() - 13, this->map->getH() - 1) = MapElements::BRICK;
+//    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 5) = MapElements::BORDER;
+//    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 4) = MapElements::BORDER;
+//    (*this->map)(FOR_WRITING, this->map->getW() - 5, this->map->getH() - 3) = MapElements::BORDER;
+//    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 5) = MapElements::BORDER;
+//    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 4) = MapElements::BORDER;
+//    (*this->map)(FOR_WRITING, this->map->getW() - 4, this->map->getH() - 3) = MapElements::BORDER;
 }
 
 void Game::update() {
