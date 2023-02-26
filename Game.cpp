@@ -97,7 +97,7 @@ void Game::inputHandler() {
                 this->quit = true;
                 break;
             case ButtonCode::SPACE:
-                this->figure->setY(this->figure->getY() + 5);
+                this->figure->setY(findFieldBottom());
                 break;
             default:
                 break;
@@ -182,4 +182,29 @@ std::vector<std::vector<int>> &Game::getRandShape() {
             return this->shapes.cube;
             break;
     }
+}
+
+int Game::findFieldBottom() {
+    int y = this->figure->getY();
+    int x = this->figure->getX();
+    int minYOnMap = this->map->getH() - this->figure->getH();
+    int maxYInFig = 0;
+    for (int yFigOnMap = y, yFig = 0; yFigOnMap < this->map->getH(); ++yFigOnMap, ++yFig) {
+        if (yFig == this->figure->getH()) {
+            yFig = 0;
+        }
+        for (int xFigOnMap = x, xFig = 0; xFig < this->figure->getW(); ++xFigOnMap, ++xFig) {
+            if ((*this->figure)(xFig, yFig) == MapElements::BRICK && (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap) != MapElements::FREE) {
+                if (maxYInFig < yFig) {
+                    maxYInFig = yFig;
+                }
+                if (minYOnMap > yFigOnMap - 1) {
+                    minYOnMap = yFigOnMap - 1 - maxYInFig;
+                }
+            }
+        }
+
+
+    }
+    return minYOnMap;
 }
