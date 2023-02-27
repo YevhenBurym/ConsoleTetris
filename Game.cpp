@@ -97,7 +97,7 @@ void Game::inputHandler() {
                 this->quit = true;
                 break;
             case ButtonCode::SPACE:
-                this->figure->setY(findFieldBottom());
+                this->findFieldBottom();
                 break;
             default:
                 break;
@@ -184,27 +184,26 @@ std::vector<std::vector<int>> &Game::getRandShape() {
     }
 }
 
-int Game::findFieldBottom() {
+void Game::findFieldBottom() {
     int y = this->figure->getY();
     int x = this->figure->getX();
-    int minYOnMap = this->map->getH() - this->figure->getH();
-    int maxYInFig = 0;
-    for (int yFigOnMap = y, yFig = 0; yFigOnMap < this->map->getH(); ++yFigOnMap, ++yFig) {
-        if (yFig == this->figure->getH()) {
-            yFig = 0;
-        }
-        for (int xFigOnMap = x, xFig = 0; xFig < this->figure->getW(); ++xFigOnMap, ++xFig) {
-            if ((*this->figure)(xFig, yFig) == MapElements::BRICK && (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap) != MapElements::FREE) {
-                if (maxYInFig < yFig) {
-                    maxYInFig = yFig;
-                }
-                if (minYOnMap > yFigOnMap - 1) {
-                    minYOnMap = yFigOnMap - 1 - maxYInFig;
+    int mapH = this->map->getH();
+    int figH = this->figure->getH();
+    int figW = this->figure->getW();
+
+    for (int shiftY = 0; shiftY < (mapH - (y + figH - 1)); ++shiftY) {
+        for (int xFigOnMap = x, xFig = 0; xFig < figW; ++xFigOnMap, ++xFig) {
+            for (int yFigOnMap = y, yFig = 0; yFig < figH; ++yFigOnMap, ++yFig) {
+
+                if ((*this->figure)(xFig, yFig) == MapElements::BRICK && (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap + shiftY) != MapElements::FREE) {
+
+                    this->figure->setY(y + shiftY - 1);
+                    this->createNewFigure();
+                    return;
                 }
             }
         }
-
-
     }
-    return minYOnMap;
+    this->figure->setY(mapH - figH);
+    this->createNewFigure();
 }

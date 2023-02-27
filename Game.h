@@ -28,7 +28,7 @@ private:
     FigureShapes shapes;
     bool quit;
     RandGenerator randGenerator;
-    int findFieldBottom();
+    void findFieldBottom();
     void createFigShapes();
     std::vector<std::vector<int>>& getRandShape();
 public:
@@ -41,5 +41,4 @@ public:
     void update();
     void print();
     void run();
-
 };
