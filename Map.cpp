@@ -10,12 +10,10 @@ Map::Map(int width, int height) {
     this->width = width;
     this->widthWithBorder = width + 2;
     this->heightWithBorder = height + 2;
-
+    this->score = 0;
+    this->level = 1;
     this->mapArray = std::vector<std::vector<int>>(this->widthWithBorder, std::vector<int>(this->heightWithBorder));
     this->gameField = std::vector<std::vector<int>>(this->width, std::vector<int>(this->height));
-}
-
-Map::~Map() {
 }
 
 int Map::getW() const {
@@ -24,6 +22,10 @@ int Map::getW() const {
 
 int Map::getH() const {
     return this->height;
+}
+
+int Map::getCurrentLevel() const {
+    return this->level;
 }
 
 void Map::update() {
@@ -37,8 +39,9 @@ void Map::update() {
 
 void Map::print() {
     char element = ' ';
-    for (auto & row : this->mapArray) {
-        for (int & col : row) {
+    for (auto row = this->mapArray.begin(); row!= this->mapArray.end(); ++row) {
+    //for (auto & row : this->mapArray) {
+        for (int & col : (*row)) {
             switch (col) {
                 case MapElements::BORDER:
                     element = '*';
@@ -53,6 +56,11 @@ void Map::print() {
                     break;
             }
             std::cout << element;
+        }
+        if (row == this->mapArray.begin()) {
+            std::cout<< "\tLevel: " << this->level;
+        } else if (row == this->mapArray.begin() + 1) {
+            std::cout<< "\tScore: " << this->score;
         }
         std::cout << std::endl;
     }
@@ -111,6 +119,8 @@ void Map::init() {
 }
 
 void Map::isLineFilled() {
+    int filledLinesAmount = 1;
+    int linesBeforeLevelUp = 10;
     int lastRow = this->height - 1;
     for (int row = lastRow; row >= 0; --row) {
         bool isFilled = true;
@@ -120,9 +130,16 @@ void Map::isLineFilled() {
             }
         }
         if (isFilled) {
-            for (int i = 0; i < lastRow - 1; ++i) {
+            for (int i = 0; i < row; ++i) {
                 this->gameField[row - i] = this->gameField[row - i - 1];
             }
+            if (filledLinesAmount < linesBeforeLevelUp) {
+                filledLinesAmount += 1;
+            } else {
+                this->level += 1;
+                filledLinesAmount = 0;
+            }
+            this->score += 1;
         }
     }
 }

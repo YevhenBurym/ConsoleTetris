@@ -23,6 +23,7 @@ private:
     int x, y;
     int xPrev, yPrev;
     float Vy;
+    float velocityCoeff;
     std::vector<std::vector<int>> figure;
     Map* map;
 public:

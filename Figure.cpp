@@ -15,14 +15,13 @@ Figure::Figure(int x, int y, std::vector<std::vector<int>>& shape, Map* map) {
     this->Vy = 0;
     this->figure = shape;
     this->map = map;
+    this->velocityCoeff = 0.1;
 }
 
 void Figure::update() {
     this->yPrev = this->y;
     this->xPrev = this->x;
-
-    float velocityCoeff = 0.2;
-    this->Vy += velocityCoeff;
+    this->Vy += this->velocityCoeff * static_cast<float>(this->map->getCurrentLevel());
     if (this->Vy >= 1) {
         this->y += static_cast<int>(this->Vy);
         this->Vy = 0;
