@@ -24,8 +24,10 @@ private:
     int widthWithBorder, heightWithBorder;
     std::vector<std::vector<int>> mapArray;
     std::vector<std::vector<int>> gameField;
+    std::vector<std::vector<int>> nextFigureShape;
     int level;
     int score;
+    int filledLinesAmount;
 public:
     Map(int width, int height);
     Map(const Map& other) = delete;
@@ -36,6 +38,7 @@ public:
     void update();
     void isLineFilled();
     int getCurrentLevel() const;
+    void setNextFigure(const std::vector<std::vector<int>>& figureShape);
     int& operator()(MapArrays arr, int x, int y);
 };
 

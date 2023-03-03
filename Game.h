@@ -26,11 +26,12 @@ private:
     Map* map;
     Figure* figure;
     FigureShapes shapes;
+    std::vector<std::vector<int>> nextShape;
     bool quit;
     RandGenerator randGenerator;
     void findFieldBottom();
     void createFigShapes();
-    std::vector<std::vector<int>>& getRandShape();
+    std::vector<std::vector<int>> getRandShape();
 public:
     Game(int width, int height);
     ~Game();

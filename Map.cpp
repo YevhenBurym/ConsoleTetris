@@ -12,6 +12,7 @@ Map::Map(int width, int height) {
     this->heightWithBorder = height + 2;
     this->score = 0;
     this->level = 1;
+    this->filledLinesAmount = 0;
     this->mapArray = std::vector<std::vector<int>>(this->widthWithBorder, std::vector<int>(this->heightWithBorder));
     this->gameField = std::vector<std::vector<int>>(this->width, std::vector<int>(this->height));
 }
@@ -39,8 +40,8 @@ void Map::update() {
 
 void Map::print() {
     char element = ' ';
+    int k = 0;
     for (auto row = this->mapArray.begin(); row!= this->mapArray.end(); ++row) {
-    //for (auto & row : this->mapArray) {
         for (int & col : (*row)) {
             switch (col) {
                 case MapElements::BORDER:
@@ -57,11 +58,31 @@ void Map::print() {
             }
             std::cout << element;
         }
+
         if (row == this->mapArray.begin()) {
             std::cout<< "\tLevel: " << this->level;
         } else if (row == this->mapArray.begin() + 1) {
             std::cout<< "\tScore: " << this->score;
+        } else if (row == this->mapArray.begin() + 3) {
+            std::cout<< "\tNext figure: ";
+        } else if (k < this->nextFigureShape[0].size() && row >= this->mapArray.begin() + 5) {
+            std::cout << "\t   ";
+            for (auto & line : this->nextFigureShape) {
+                switch (line[k]) {
+                    case MapElements::BRICK:
+                        element = '#';
+                        break;
+                    case MapElements::FREE:
+                        element = ' ';
+                        break;
+                    default:
+                        break;
+                }
+                std::cout << element;
+            }
+            k++;
         }
+
         std::cout << std::endl;
     }
 }
@@ -119,8 +140,7 @@ void Map::init() {
 }
 
 void Map::isLineFilled() {
-    int filledLinesAmount = 1;
-    int linesBeforeLevelUp = 10;
+    int linesBeforeLevelUp = 1;
     int lastRow = this->height - 1;
     for (int row = lastRow; row >= 0; --row) {
         bool isFilled = true;
@@ -134,12 +154,16 @@ void Map::isLineFilled() {
                 this->gameField[row - i] = this->gameField[row - i - 1];
             }
             if (filledLinesAmount < linesBeforeLevelUp) {
-                filledLinesAmount += 1;
+                this->filledLinesAmount++;
             } else {
-                this->level += 1;
-                filledLinesAmount = 0;
+                this->level++;
+                this->filledLinesAmount = 0;
             }
-            this->score += 1;
+            this->score++;
         }
     }
+}
+
+void Map::setNextFigure(const std::vector<std::vector<int>>& figureShape) {
+    this->nextFigureShape = figureShape;
 }

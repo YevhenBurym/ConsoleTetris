@@ -10,7 +10,10 @@ Game::Game(int width, int height) {
     this->createFigShapes();
     this->quit = false;
     this->map = new Map(width, height);
-    this->figure = new Figure(width / 2 - 1, 0, this->getRandShape(), this->map);
+    std::vector<std::vector<int>> shape = this->getRandShape();
+    this->nextShape = this->getRandShape();
+    this->figure = new Figure(width / 2 - 1, 0, shape, this->map);
+    this->map->setNextFigure(this->nextShape);
 }
 
 Game::~Game() {
@@ -125,7 +128,7 @@ void Game::checkCollision() {
 
 
     for (int xFigOnMap = this->figure->getX(), xFig = 0; xFig < this->figure->getW(); ++xFigOnMap, ++xFig) {
-        for (int yFigOnMap = this->figure->getY(), yFig = 0; yFig <this->figure->getH(); ++yFigOnMap, ++yFig) {
+        for (int yFigOnMap = this->figure->getY(), yFig = 0; yFig < this->figure->getH(); ++yFigOnMap, ++yFig) {
 
             if ((*this->figure)(xFig, yFig) == MapElements::BRICK &&
                 (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap) != MapElements::FREE) {
@@ -147,41 +150,61 @@ void Game::checkCollision() {
 }
 
 void Game::createNewFigure() {
-    Figure* temp = this->figure;
-    this->figure = new Figure(this->map->getW() / 2 - 1, 0, this->getRandShape(), this->map);
+    Figure *temp = this->figure;
+    std::vector<std::vector<int>> shape = this->getRandShape();
+    this->figure = new Figure(this->map->getW() / 2 - 1, 0, this->nextShape, this->map);
     temp->writeToMapArray(FOR_WRITING);
     delete temp;
+    this->nextShape = this->getRandShape();
+    this->map->setNextFigure(this->nextShape);
 }
 
-std::vector<std::vector<int>> &Game::getRandShape() {
+std::vector<std::vector<int>> Game::getRandShape() {
     uint8_t shapesAmount = 7;
+    uint8_t maxRotationsAmount = 3;
     uint8_t randomShape = (shapesAmount - 1) * this->randGenerator.getRandNumber();
+    uint8_t rotationsAmount = maxRotationsAmount * this->randGenerator.getRandNumber();
+    std::vector<std::vector<int>> currentShape;
     switch (randomShape) {
         case 0:
-            return this->shapes.cube;
+            currentShape = this->shapes.cube;
             break;
         case 1:
-            return this->shapes.jRight;
+            currentShape = this->shapes.jRight;
             break;
         case 2:
-            return this->shapes.jLeft;
+            currentShape = this->shapes.jLeft;
             break;
         case 3:
-            return this->shapes.line;
+            currentShape = this->shapes.line;
             break;
         case 4:
-            return this->shapes.t;
+            currentShape = this->shapes.t;
             break;
         case 5:
-            return this->shapes.zRight;
+            currentShape = this->shapes.zRight;
             break;
         case 6:
-            return this->shapes.zLeft;
+            currentShape = this->shapes.zLeft;
             break;
         default:
-            return this->shapes.cube;
+            currentShape = this->shapes.cube;
             break;
     }
+
+    for (int rotation = 0; rotation <= rotationsAmount; ++rotation) {
+        int rows = currentShape.size();
+        int columns = currentShape[0].size();
+        std::vector<std::vector<int>> rotatedShape(columns, std::vector<int>(rows));
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                rotatedShape[columns - j - 1][i] = currentShape[i][j];
+            }
+        }
+        currentShape = rotatedShape;
+    }
+    return currentShape;
 }
 
 void Game::findFieldBottom() {
@@ -195,7 +218,8 @@ void Game::findFieldBottom() {
         for (int xFigOnMap = x, xFig = 0; xFig < figW; ++xFigOnMap, ++xFig) {
             for (int yFigOnMap = y, yFig = 0; yFig < figH; ++yFigOnMap, ++yFig) {
 
-                if ((*this->figure)(xFig, yFig) == MapElements::BRICK && (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap + shiftY) != MapElements::FREE) {
+                if ((*this->figure)(xFig, yFig) == MapElements::BRICK &&
+                    (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap + shiftY) != MapElements::FREE) {
 
                     this->figure->setY(y + shiftY - 1);
                     this->createNewFigure();
