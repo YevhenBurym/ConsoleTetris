@@ -5,7 +5,11 @@
 #include <iostream>
 #include "Game.h"
 
-Game::Game(int width, int height) {
+Game::Game() {
+    int width = 20;
+    int height = 20;
+    this->state = GameState::MENU;
+    this->showMenu();
     this->randGenerator = RandGenerator();
     this->createFigShapes();
     this->quit = false;
@@ -65,13 +69,17 @@ void Game::run() {
     std::chrono::high_resolution_clock::time_point startTime;
     std::chrono::duration<double> frameTime{};
 
-    this->init();
+    //this->init();
 
     while (!this->quit) {
         this->inputHandler();
         startTime = std::chrono::high_resolution_clock::now();
-        this->update();
-        this->print();
+        if (this->state == GameState::PLAY) {
+            this->update();
+        }
+        if (this->state == GameState::PLAY) {
+            this->print();
+        }
         frameTime = std::chrono::high_resolution_clock::now() - startTime;
         if (frameDelay > frameTime.count()) {
             int x = frameDelay - static_cast<int>(frameTime.count());
@@ -83,28 +91,42 @@ void Game::run() {
 void Game::inputHandler() {
     if (_kbhit()) {
         int key = _getch();
-        switch (key) {
-            case ButtonCode::LEFT:
-                this->figure->setX(this->figure->getX() - 1);
-                break;
-            case ButtonCode::UP:
-                this->figure->rotate();
-                break;
-            case ButtonCode::RIGHT:
-                this->figure->setX(this->figure->getX() + 1);
-                break;
-            case ButtonCode::DOWN:
-                this->figure->setY(this->figure->getY() + 1);
-                break;
-            case ButtonCode::ESCAPE:
+            if (this->state == GameState::PLAY) {
+                switch (key) {
+                    case ButtonCode::LEFT:
+                        this->figure->setX(this->figure->getX() - 1);
+                        break;
+                    case ButtonCode::UP:
+                        this->figure->rotate();
+                        break;
+                    case ButtonCode::RIGHT:
+                        this->figure->setX(this->figure->getX() + 1);
+                        break;
+                    case ButtonCode::DOWN:
+                        this->figure->setY(this->figure->getY() + 1);
+                        break;
+                    case ButtonCode::SPACE:
+                        this->findFieldBottom();
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                switch (key) {
+                    case ButtonCode::Y:
+                        this->state = GameState::PLAY;
+                        this->init();
+                        break;
+                    case ButtonCode::N:
+                        this->quit = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (key == ButtonCode::ESCAPE) {
                 this->quit = true;
-                break;
-            case ButtonCode::SPACE:
-                this->findFieldBottom();
-                break;
-            default:
-                break;
-        }
+            }
     }
 }
 
@@ -157,6 +179,18 @@ void Game::createNewFigure() {
     delete temp;
     this->nextShape = this->getRandShape();
     this->map->setNextFigure(this->nextShape);
+
+    for (int xFigOnMap = this->figure->getX(), xFig = 0; xFig < this->figure->getW(); ++xFigOnMap, ++xFig) {
+        for (int yFigOnMap = this->figure->getY(), yFig = 0; yFig < this->figure->getH(); ++yFigOnMap, ++yFig) {
+            if ((*this->figure)(xFig, yFig) == MapElements::BRICK &&
+                (*this->map)(FOR_WRITING, xFigOnMap, yFigOnMap) != MapElements::FREE) {
+                this->state = GameState::GAMEOVER;
+                system("cls");
+                this->showGameOver();
+                return;
+            }
+        }
+    }
 }
 
 std::vector<std::vector<int>> Game::getRandShape() {
@@ -231,3 +265,15 @@ void Game::findFieldBottom() {
     this->figure->setY(mapH - figH);
     this->createNewFigure();
 }
+
+void Game::showMenu() {
+    std::cout << "   =====CONSOLE TETRIS=====\n\n";
+    std::cout << "    Do you wanna play?\n";
+    std::cout << "    y - play, n - quit\n";
+}
+
+void Game::showGameOver() {
+    std::cout << "\n\n   GAME OVER!\n\n";
+    std::cout << "   Retry? [y/n]";
+}
+

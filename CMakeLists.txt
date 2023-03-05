@@ -3,4 +3,8 @@ project(ConsoleTetris)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(ConsoleTetris main.cpp Map.cpp Figure.cpp Figure.h Game.cpp Game.h RandomGenerator.cpp RandomGenerator.h)
+add_executable(ConsoleTetris main.cpp
+        Map.cpp
+        Figure.cpp
+        Game.cpp
+        RandomGenerator.cpp)

@@ -116,6 +116,9 @@ int &Map::operator()(MapArrays arr, int x, int y) {
 }
 
 void Map::init() {
+    this->score = 0;
+    this->level = 1;
+    this->filledLinesAmount = 0;
 
     for (auto &row: this->gameField) {
         for (int &col: row) {

@@ -18,11 +18,20 @@ enum ButtonCode {
     RIGHT = 77,
     DOWN = 80,
     ESCAPE = 27,
-    SPACE = 32
+    SPACE = 32,
+    Y = 121,
+    N = 110
+};
+
+enum GameState {
+    MENU = 0,
+    PLAY = 1,
+    GAMEOVER = 2
 };
 
 class Game {
 private:
+    GameState state;
     Map* map;
     Figure* figure;
     FigureShapes shapes;
@@ -33,7 +42,7 @@ private:
     void createFigShapes();
     std::vector<std::vector<int>> getRandShape();
 public:
-    Game(int width, int height);
+    Game();
     ~Game();
     void createNewFigure();
     void inputHandler();
@@ -42,4 +51,6 @@ public:
     void update();
     void print();
     void run();
+    void showMenu();
+    void showGameOver();
 };
