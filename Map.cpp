@@ -143,7 +143,7 @@ void Map::init() {
 }
 
 void Map::isLineFilled() {
-    int linesBeforeLevelUp = 1;
+    int linesBeforeLevelUp = 9;
     int lastRow = this->height - 1;
     for (int row = lastRow; row >= 0; --row) {
         bool isFilled = true;
